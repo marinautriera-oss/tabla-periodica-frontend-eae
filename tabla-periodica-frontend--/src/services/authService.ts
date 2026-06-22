@@ -1,12 +1,24 @@
-import axios from 'axios';
+const API_URL = 'http://localhost:8080';
 
-const API = 'http://localhost:8080/api/auth/';
 export const login = async (email: string, contraseña: string) => {
-    const { data } = await axios.post(`${API}/auth/login`, { email, contraseña });
+    const response = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, contraseña }),
+    });
+    const data = await response.json();
+    if (!response.ok) { throw new Error(data.message); }
     return data;
 }
 
-export const register = async (name: string, email: string, contraseña: string) => {
-    const { data } = await axios.post(`${API}/auth/register`, { name, email, contraseña });
+export const register = async (nombre: string, email: string, contraseña: string) => {
+    const response = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre, email, contraseña }),
+    });
+    const data = await response.json();
+    if (!response.ok) { throw new Error(data.message); }
     return data;
-}
+};
+
