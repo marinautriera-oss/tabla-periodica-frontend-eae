@@ -1,73 +1,179 @@
-# React + TypeScript + Vite
+# Tabla Periódica EAE - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web desarrollada con React + TypeScript + Vite para visualizar la tabla periódica de forma interactiva.
 
-Currently, two official plugins are available:
+## Tecnologías
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 18 + TypeScript
+- Vite
+- React Router DOM
+- CSS Modules
+- Diseño neón sobre fondo negro
 
-## React Compiler
+## Instalación
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Clonar el repositorio:
+```bash
+git clone https://github.com/marinautriera-oss/tabla-periodica-frontend-eae.git
+cd tabla-periodica-frontend-eae/tabla-periodica-frontend--
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Instalar dependencias:
+```bash
+npm install
 ```
+
+3. Correr el servidor de desarrollo:
+```bash
+npm run dev
+```
+
+La app corre en `http://localhost:5173`
+
+## Funcionalidades
+
+- **Tabla Periódica interactiva**: visualización con grilla real (18 grupos × 7 períodos), colores neón por categoría, hover con efecto de brillo
+- **Detalle de elemento**: al hacer clic en un elemento se ve su información completa
+- **Favoritos**: usuarios logueados pueden marcar/desmarcar elementos con ⭐
+- **Quiz dinámico**: preguntas generadas automáticamente desde los elementos de la base de datos, con feedback inmediato
+- **Autenticación completa**: registro con verificación por email, login con JWT
+- **Panel Admin**: CRUD completo de elementos (solo para administradores)
+- **Diseño responsivo**: funciona de 320px a 2000px
+
+## Páginas
+
+| Ruta | Descripción | Auth |
+|------|-------------|------|
+| `/` | Tabla periódica principal | No |
+| `/login` | Iniciar sesión | No |
+| `/register` | Registrarse | No |
+| `/verificar/:token` | Verificar email | No |
+| `/elemento/:id` | Detalle de elemento | No |
+| `/quiz` | Quiz de química | No |
+| `/admin` | Panel de administración | Sí |
+
+## Estructura del proyecto
+# Tabla Periódica EAE - Frontend
+
+Aplicación web desarrollada con React + TypeScript + Vite para visualizar la tabla periódica de forma interactiva.
+
+## Tecnologías
+
+- React 18 + TypeScript
+- Vite
+- React Router DOM
+- CSS Modules
+- Diseño neón sobre fondo negro
+
+## Instalación
+
+1. Clonar el repositorio:
+```bash
+git clone https://github.com/marinautriera-oss/tabla-periodica-frontend-eae.git
+cd tabla-periodica-frontend-eae/tabla-periodica-frontend--
+```
+
+2. Instalar dependencias:
+```bash
+npm install
+```
+
+3. Correr el servidor de desarrollo:
+```bash
+npm run dev
+```
+
+La app corre en `http://localhost:5173`
+
+## Funcionalidades
+
+- **Tabla Periódica interactiva**: visualización con grilla real (18 grupos × 7 períodos), colores neón por categoría, hover con efecto de brillo
+- **Detalle de elemento**: al hacer clic en un elemento se ve su información completa
+- **Favoritos**: usuarios logueados pueden marcar/desmarcar elementos con ⭐
+- **Quiz dinámico**: preguntas generadas automáticamente desde los elementos de la base de datos, con feedback inmediato
+- **Autenticación completa**: registro con verificación por email, login con JWT
+- **Panel Admin**: CRUD completo de elementos (solo para administradores)
+- **Diseño responsivo**: funciona de 320px a 2000px
+
+## Páginas
+
+| Ruta | Descripción | Auth |
+|------|-------------|------|
+| `/` | Tabla periódica principal | No |
+| `/login` | Iniciar sesión | No |
+| `/register` | Registrarse | No |
+| `/verificar/:token` | Verificar email | No |
+| `/elemento/:id` | Detalle de elemento | No |
+| `/quiz` | Quiz de química | No |
+| `/admin` | Panel de administración | Sí |
+
+## Estructura del proyecto
+# Tabla Periódica EAE - Frontend
+
+Aplicación web desarrollada con React + TypeScript + Vite para visualizar la tabla periódica de forma interactiva.
+
+## Tecnologías
+
+- React 18 + TypeScript
+- Vite
+- React Router DOM
+- CSS Modules
+- Diseño neón sobre fondo negro
+
+## Instalación
+
+1. Clonar el repositorio:
+```bash
+git clone https://github.com/marinautriera-oss/tabla-periodica-frontend-eae.git
+cd tabla-periodica-frontend-eae/tabla-periodica-frontend--
+```
+
+2. Instalar dependencias:
+```bash
+npm install
+```
+
+3. Correr el servidor de desarrollo:
+```bash
+npm run dev
+```
+
+La app corre en `http://localhost:5173`
+
+## Funcionalidades
+
+- **Tabla Periódica interactiva**: visualización con grilla real (18 grupos × 7 períodos), colores neón por categoría, hover con efecto de brillo
+- **Detalle de elemento**: al hacer clic en un elemento se ve su información completa
+- **Favoritos**: usuarios logueados pueden marcar/desmarcar elementos con ⭐
+- **Quiz dinámico**: preguntas generadas automáticamente desde los elementos de la base de datos, con feedback inmediato
+- **Autenticación completa**: registro con verificación por email, login con JWT
+- **Panel Admin**: CRUD completo de elementos (solo para administradores)
+- **Diseño responsivo**: funciona de 320px a 2000px
+
+## Páginas
+
+| Ruta | Descripción | Auth |
+|------|-------------|------|
+| `/` | Tabla periódica principal | No |
+| `/login` | Iniciar sesión | No |
+| `/register` | Registrarse | No |
+| `/verificar/:token` | Verificar email | No |
+| `/elemento/:id` | Detalle de elemento | No |
+| `/quiz` | Quiz de química | No |
+| `/admin` | Panel de administración | Sí |
+
+## Estructura del proyecto
+
+src/
+
+├── components/      # Navbar
+
+├── pages/           # Login, Register, Home, Admin, Quiz, ElementoDetalle, Verificar
+
+├── services/        # authService, elementService, favoritoService
+
+└── App.tsx          # Rutas principales
+
+Usuario de prueba
+email:ma.utriera@gmail.com
+password:123456
