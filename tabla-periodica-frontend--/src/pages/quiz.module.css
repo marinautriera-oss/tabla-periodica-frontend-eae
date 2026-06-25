@@ -1,0 +1,234 @@
+.page {
+    min-height: calc(100vh - 65px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 24px;
+    background-color: #000;
+}
+
+.quizCard {
+    width: 100%;
+    max-width: 480px;
+    background-color: #1a1a2e;
+    border: 1px solid #333;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 0 40px rgba(59, 158, 255, 0.15);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.progressLabel {
+    font-family: monospace;
+    font-size: 12px;
+    color: #ffc60a;
+    letter-spacing: 2px;
+}
+
+.progressBar {
+    width: 140px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: linear-gradient(90deg, #3b9eff, #e84fff);
+    box-shadow: 0 0 8px #3b9eff;
+    transition: width 0.4s ease;
+}
+
+.preguntaTexto {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 28px;
+    line-height: 1.5;
+    font-family: monospace;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.opciones {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+}
+
+.opcion {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 14px 18px;
+    color: #ccc;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: monospace;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    text-align: left;
+}
+
+.opcion:hover {
+    border-color: #3b9eff;
+    color: #3b9eff;
+    box-shadow: 0 0 10px #3b9eff44;
+    background: rgba(59, 158, 255, 0.05);
+}
+
+.opcionSeleccionada {
+    background: rgba(255, 198, 10, 0.08);
+    border: 1px solid #ffc60a;
+    border-radius: 10px;
+    padding: 14px 18px;
+    color: #ffc60a;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: monospace;
+    letter-spacing: 1px;
+    font-weight: 600;
+    text-align: left;
+    box-shadow: 0 0 12px #ffc60a44;
+}
+
+.opcionCorrecta {
+    background: rgba(0, 245, 160, 0.1);
+    border: 1px solid #00f5a0;
+    border-radius: 10px;
+    padding: 14px 18px;
+    color: #00f5a0;
+    font-size: 14px;
+    cursor: default;
+    font-family: monospace;
+    letter-spacing: 1px;
+    font-weight: 600;
+    text-align: left;
+    box-shadow: 0 0 12px #00f5a044;
+}
+
+.opcionIncorrecta {
+    background: rgba(255, 68, 68, 0.1);
+    border: 1px solid #ff4444;
+    border-radius: 10px;
+    padding: 14px 18px;
+    color: #ff4444;
+    font-size: 14px;
+    cursor: default;
+    font-family: monospace;
+    letter-spacing: 1px;
+    font-weight: 600;
+    text-align: left;
+    box-shadow: 0 0 12px #ff444444;
+}
+
+.feedback {
+    text-align: center;
+    font-family: monospace;
+    font-size: 13px;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+    min-height: 20px;
+}
+
+.feedbackCorrecto {
+    color: #00f5a0;
+    text-shadow: 0 0 8px #00f5a0;
+}
+
+.feedbackIncorrecto {
+    color: #ff4444;
+    text-shadow: 0 0 8px #ff4444;
+}
+
+.nextButton {
+    width: 100%;
+    background: linear-gradient(90deg, #3b9eff22, #e84fff22);
+    border: 1px solid #3b9eff;
+    border-radius: 10px;
+    padding: 13px;
+    color: #3b9eff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: monospace;
+    letter-spacing: 2px;
+    transition: all 0.2s;
+    box-shadow: 0 0 10px #3b9eff44;
+}
+
+.nextButton:hover:not(:disabled) {
+    box-shadow: 0 0 20px #3b9eff;
+    background: rgba(59, 158, 255, 0.15);
+}
+
+.nextButton:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.resultCard {
+    width: 100%;
+    max-width: 420px;
+    background-color: #1a1a2e;
+    border: 1px solid #00f5a0;
+    border-radius: 16px;
+    padding: 40px 32px;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(0, 245, 160, 0.2);
+}
+
+.resultTag {
+    font-family: monospace;
+    font-size: 11px;
+    color: #00f5a0;
+    letter-spacing: 4px;
+    margin: 0 0 8px;
+}
+
+.resultScore {
+    font-size: 64px;
+    font-weight: 700;
+    color: #00f5a0;
+    margin: 12px 0;
+    text-shadow: 0 0 24px #00f5a0;
+    font-family: monospace;
+}
+
+.resultMessage {
+    color: #aaa;
+    font-size: 14px;
+    margin: 0 0 28px;
+    font-family: monospace;
+    letter-spacing: 1px;
+    line-height: 1.6;
+}
+
+.retryButton {
+    background: linear-gradient(90deg, #00f5a022, #3b9eff22);
+    border: 1px solid #00f5a0;
+    border-radius: 10px;
+    padding: 13px 32px;
+    color: #00f5a0;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: monospace;
+    letter-spacing: 2px;
+    box-shadow: 0 0 12px #00f5a044;
+    transition: all 0.2s;
+}
+
+.retryButton:hover {
+    box-shadow: 0 0 24px #00f5a0;
+    background: rgba(0, 245, 160, 0.15);
+}
