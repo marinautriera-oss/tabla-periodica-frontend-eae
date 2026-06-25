@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getFavoritos, addFavorito, removeFavorito } from '../services/favoritoService'
 import { useNavigate } from 'react-router-dom'
-
+ import styles from './home.module.css'
 const NEON: Record<string, string> = {
     'METAL':     '#3b9eff',
     'NO METAL':  '#00f5a0',
@@ -68,57 +68,31 @@ function Home() {
         }
     })
 
-    return (
-        <div style={{
-            backgroundColor: '#000',
-            minHeight: '100vh',
-            padding: '32px 16px',
-            fontFamily: 'monospace'
-        }}>
-            <h1 style={{
-                textAlign: 'center',
-                color: '#fff',
-                fontSize: '22px',
-                letterSpacing: '6px',
-                textTransform: 'uppercase',
-                marginBottom: '8px',
-                textShadow: '0 0 16px #3b9eff'
-            }}>
-                Tabla Periódica
-            </h1>
+return (
+    <div className={styles.container}>
+        <h1 className={styles.titulo}>Tabla Periódica</h1>
 
-            {error && <p style={{ color: '#ff4444', textAlign: 'center', marginBottom: '12px' }}>{error}</p>}
+        {error && <p className={styles.error}>{error}</p>}
 
-            {/* Leyenda */}
-            <div style={{
-                display: 'flex',
-                gap: '20px',
-                justifyContent: 'center',
-                marginBottom: '28px',
-                flexWrap: 'wrap'
-            }}>
-                {Object.entries(NEON).map(([cat, color]) => (
-                    <div key={cat} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <div style={{
-                            width: '12px', height: '12px',
-                            backgroundColor: color,
-                            borderRadius: '2px',
-                            boxShadow: `0 0 8px ${color}`
-                        }} />
-                        <span style={{ color: color, fontSize: '11px', letterSpacing: '1px' }}>{cat}</span>
-                    </div>
-                ))}
-            </div>
+        {/* Leyenda */}
+        <div className={styles.leyenda}>
+            {Object.entries(NEON).map(([cat, color]) => (
+                <div key={cat} className={styles.leyendaItem}>
+                    <div className={styles.leyendaDot} style={{
+                        backgroundColor: color,
+                        boxShadow: `0 0 8px ${color}`
+                    }} />
+                    <span className={styles.leyendaLabel} style={{ color }}>{cat}</span>
+                </div>
+            ))}
+        </div>
 
-            {/* Grilla */}
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(18, 64px)',
-                gridTemplateRows: 'repeat(7, 76px)',
-                gap: '4px',
-                overflowX: 'auto',
-                justifyContent: 'center',
-            }}>
+        {/* Hint de scroll en mobile */}
+        <p className={styles.scrollHint}>← deslizá para ver la tabla →</p>
+
+        {/* Grilla con scroll horizontal */}
+        <div className={styles.grillaWrapper}>
+            <div className={styles.grilla}>
                 {grilla.map((fila, fi) =>
                     fila.map((el, ci) => {
                         const color = el ? NEON[el.CATEGORIA] : null
@@ -150,7 +124,6 @@ function Home() {
                                         d.style.zIndex = '10'
                                     }
                                 }}
-                        
                                 onMouseLeave={e => {
                                     if (el && color) {
                                         const d = e.currentTarget as HTMLDivElement
@@ -162,33 +135,16 @@ function Home() {
                             >
                                 {el && color && (
                                     <>
-                                        <span style={{
-                                            fontSize: '9px',
-                                            color: '#666',
-                                            alignSelf: 'flex-start',
-                                            paddingLeft: '5px',
-                                            lineHeight: 1
-                                        }}>
+                                        <span style={{ fontSize: '9px', color: '#aaa', alignSelf: 'flex-start', paddingLeft: '5px', lineHeight: 1 }}>
                                             {el.NUMERO_ATOMICO}
                                         </span>
-                                        <span style={{
-                                            fontSize: '24px',
-                                            fontWeight: 'bold',
-                                            color: color,
-                                            textShadow: `0 0 12px ${color}`,
-                                            lineHeight: 1.1
-                                        }}>
+                                        <span style={{ fontSize: '24px', fontWeight: 'bold', color: color, textShadow: `0 0 12px ${color}`, lineHeight: 1.1 }}>
                                             {el.SIMBOLO}
                                         </span>
-                                        <span style={{
-                                            fontSize: '8px',
-                                            color: '#ccc',
-                                            textAlign: 'center',
-                                            paddingBottom: '1px'
-                                        }}>
+                                        <span style={{ fontSize: '8px', color: '#ccc', textAlign: 'center', paddingBottom: '1px' }}>
                                             {el.NOMBRE}
                                         </span>
-                                        <span style={{ fontSize: '7px', color: '#555' }}>
+                                        <span style={{ fontSize: '7px', color: '#888' }}>
                                             {el.MASA_ATOMICA}
                                         </span>
                                         {token && (
@@ -207,6 +163,7 @@ function Home() {
                                                     fontSize: '10px',
                                                     padding: 0,
                                                     lineHeight: 1,
+                                                    color: esFav ? 'gold' : '#555',
                                                     filter: esFav ? 'drop-shadow(0 0 4px gold)' : 'none'
                                                 }}
                                             >
@@ -221,7 +178,5 @@ function Home() {
                 )}
             </div>
         </div>
-    )
-}
-
-export default Home
+    </div>
+)}

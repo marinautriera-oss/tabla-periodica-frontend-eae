@@ -98,3 +98,16 @@
     background-color: #ff444422;
     box-shadow: 0 0 12px #ff4444;
 }
+@media (max-width: 768px) {
+    .nav {
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .links {
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
