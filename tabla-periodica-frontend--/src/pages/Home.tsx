@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { getFavoritos, addFavorito, removeFavorito } from '../services/favoritoService'
 import { useNavigate } from 'react-router-dom'
- import styles from './home.module.css'
+import styles from './home.module.css'
+ 
+const API_URL = import.meta.env.VITE_API_URL
 const NEON: Record<string, string> = {
     'METAL':     '#3b9eff',
     'NO METAL':  '#00f5a0',
@@ -23,7 +25,7 @@ function Home() {
 
     const cargarElementos = async () => {
         try {
-            const response = await fetch('http://localhost:8080/elements')
+            const response = await fetch(`${API_URL}/elements`)
             const data = await response.json()
             if (!response.ok) throw new Error(data.message)
             setElementos(data)

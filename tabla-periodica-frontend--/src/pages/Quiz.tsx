@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import styles from './quiz.module.css'
 
+const API_URL = import.meta.env.VITE_API_URL
 interface Elemento {
     ID: number
     NOMBRE: string
@@ -68,7 +69,7 @@ function Quiz() {
     const [cargando, setCargando] = useState(true)
 
     useEffect(() => {
-        fetch('http://localhost:8080/elements')
+        fetch(`${API_URL}/elements`)
             .then(r => r.json())
             .then(data => {
                 setElementos(data)
