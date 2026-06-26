@@ -16,7 +16,7 @@ function ElementoDetalle() {
     const [error, setError] = useState('')
 const API_URL = import.meta.env.VITE_API_URL
     useEffect(() => {
-        fetch(`${API_URL}/elements`)
+        fetch(`${API_URL}/elements/${id}`)
             .then(r => r.json())
             .then(data => setElemento(data))
             .catch(() => setError('No se pudo cargar el elemento'))
