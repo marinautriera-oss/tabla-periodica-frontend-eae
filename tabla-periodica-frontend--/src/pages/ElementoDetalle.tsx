@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 
-const API_URL = import.meta.env.VITE_API_URL
+
 const NEON: Record<string, string> = {
     'METAL':     '#3b9eff',
     'NO METAL':  '#00f5a0',
@@ -14,7 +14,7 @@ function ElementoDetalle() {
     const navigate = useNavigate()
     const [elemento, setElemento] = useState<any>(null)
     const [error, setError] = useState('')
-
+const API_URL = import.meta.env.VITE_API_URL
     useEffect(() => {
         fetch(`${API_URL}/elements`)
             .then(r => r.json())
