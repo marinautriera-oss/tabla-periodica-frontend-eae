@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getElementos, createElement, updateElemento, deleteElemento } from '../services/elementService'
+import { isAdmin } from '../utils/auth'
 
 function Admin() {
+    const navigate = useNavigate()
     const [elementos, setElementos] = useState([])
     const [error, setError] = useState('')
     const [editando, setEditando] = useState<any>(null)
@@ -11,8 +14,13 @@ function Admin() {
         MASA_ATOMICA: '', GRUPO: '', PERIODO: '', CATEGORIA: ''
     })
 
+    // 🔒 Protección de ruta: solo ADMIN puede entrar
     useEffect(() => {
-        cargarElementos()
+        if (!isAdmin()) {
+            navigate('/login')
+        } else {
+            cargarElementos()
+        }
     }, [])
 
     const cargarElementos = async () => {
@@ -30,6 +38,7 @@ function Admin() {
 
     const handleSubmit = async (e: any) => {
         e.preventDefault()
+        setError('')
         try {
             if (editando) {
                 await updateElemento(editando.ID, form)
@@ -51,9 +60,11 @@ function Admin() {
             NUMERO_ATOMICO: el.NUMERO_ATOMICO, MASA_ATOMICA: el.MASA_ATOMICA,
             GRUPO: el.GRUPO, PERIODO: el.PERIODO, CATEGORIA: el.CATEGORIA
         })
+        window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
     const handleBorrar = async (id: number) => {
+        if (!confirm('¿Seguro que querés borrar este elemento?')) return
         try {
             await deleteElemento(id)
             cargarElementos()
@@ -62,50 +73,183 @@ function Admin() {
         }
     }
 
+    const handleCancelar = () => {
+        setEditando(null)
+        setForm({ NOMBRE: '', SIMBOLO: '', NUMERO_ATOMICO: '', MASA_ATOMICA: '', GRUPO: '', PERIODO: '', CATEGORIA: '' })
+    }
+
     return (
-        <div>
-            <h1>Admin - Elementos</h1>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+        <div style={{
+            backgroundColor: '#000',
+            minHeight: '100vh',
+            fontFamily: 'monospace',
+            padding: '32px 24px',
+            color: '#fff'
+        }}>
+            <h1 style={{ color: '#3b9eff', letterSpacing: '4px', textTransform: 'uppercase', marginBottom: '32px' }}>
+                ⚙️ Panel Admin — Elementos
+            </h1>
 
-            <h2>{editando ? 'Editar elemento' : 'Nuevo elemento'}</h2>
-            <form onSubmit={handleSubmit}>
-                <input name="NOMBRE" placeholder="Nombre" value={form.NOMBRE} onChange={handleChange} />
-                <input name="SIMBOLO" placeholder="Símbolo" value={form.SIMBOLO} onChange={handleChange} />
-                <input name="NUMERO_ATOMICO" placeholder="Número atómico" value={form.NUMERO_ATOMICO} onChange={handleChange} />
-                <input name="MASA_ATOMICA" placeholder="Masa atómica" value={form.MASA_ATOMICA} onChange={handleChange} />
-                <input name="GRUPO" placeholder="Grupo" value={form.GRUPO} onChange={handleChange} />
-                <input name="PERIODO" placeholder="Período" value={form.PERIODO} onChange={handleChange} />
-                <input name="CATEGORIA" placeholder="Categoría" value={form.CATEGORIA} onChange={handleChange} />
-                <button type="submit">{editando ? 'Actualizar' : 'Crear'}</button>
-                {editando && <button type="button" onClick={() => setEditando(null)}>Cancelar</button>}
-            </form>
+            {error && (
+                <p style={{
+                    color: '#ff4444', backgroundColor: '#ff444411',
+                    border: '1px solid #ff4444', borderRadius: '8px',
+                    padding: '12px 16px', marginBottom: '24px'
+                }}>
+                    {error}
+                </p>
+            )}
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nombre</th><th>Símbolo</th><th>Nº Atómico</th>
-                        <th>Masa</th><th>Grupo</th><th>Período</th><th>Categoría</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {elementos.map((el: any) => (
-                        <tr key={el.ID}>
-                            <td>{el.NOMBRE}</td>
-                            <td>{el.SIMBOLO}</td>
-                            <td>{el.NUMERO_ATOMICO}</td>
-                            <td>{el.MASA_ATOMICA}</td>
-                            <td>{el.GRUPO}</td>
-                            <td>{el.PERIODO}</td>
-                            <td>{el.CATEGORIA}</td>
-                            <td>
-                                <button onClick={() => handleEditar(el)}>Editar</button>
-                                <button onClick={() => handleBorrar(el.ID)}>Borrar</button>
-                            </td>
-                        </tr>
+            {/* Formulario crear / editar */}
+            <div style={{
+                backgroundColor: '#0b0e14',
+                border: '1px solid #3b9eff44',
+                borderRadius: '12px',
+                padding: '24px',
+                marginBottom: '40px'
+            }}>
+                <h2 style={{ color: editando ? '#00f5a0' : '#3b9eff', marginBottom: '20px', fontSize: '14px', letterSpacing: '3px' }}>
+                    {editando ? '✏️ EDITAR ELEMENTO' : '➕ NUEVO ELEMENTO'}
+                </h2>
+                <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
+                    {[
+                        { name: 'NOMBRE', placeholder: 'Nombre' },
+                        { name: 'SIMBOLO', placeholder: 'Símbolo' },
+                        { name: 'NUMERO_ATOMICO', placeholder: 'Número atómico' },
+                        { name: 'MASA_ATOMICA', placeholder: 'Masa atómica' },
+                        { name: 'GRUPO', placeholder: 'Grupo' },
+                        { name: 'PERIODO', placeholder: 'Período' },
+                        { name: 'CATEGORIA', placeholder: 'Categoría' },
+                    ].map(field => (
+                        <input
+                            key={field.name}
+                            name={field.name}
+                            placeholder={field.placeholder}
+                            value={(form as any)[field.name]}
+                            onChange={handleChange}
+                            required
+                            style={{
+                                backgroundColor: '#111',
+                                border: '1px solid #3b9eff44',
+                                borderRadius: '8px',
+                                padding: '10px 14px',
+                                color: '#fff',
+                                fontSize: '13px',
+                                fontFamily: 'monospace',
+                                outline: 'none',
+                            }}
+                        />
                     ))}
-                </tbody>
-            </table>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                        <button type="submit" style={{
+                            backgroundColor: 'transparent',
+                            border: `1px solid ${editando ? '#00f5a0' : '#3b9eff'}`,
+                            borderRadius: '8px',
+                            padding: '10px 20px',
+                            color: editando ? '#00f5a0' : '#3b9eff',
+                            fontSize: '13px',
+                            fontWeight: 'bold',
+                            letterSpacing: '2px',
+                            cursor: 'pointer',
+                            fontFamily: 'monospace',
+                        }}>
+                            {editando ? 'ACTUALIZAR' : 'CREAR'}
+                        </button>
+                        {editando && (
+                            <button type="button" onClick={handleCancelar} style={{
+                                backgroundColor: 'transparent',
+                                border: '1px solid #555',
+                                borderRadius: '8px',
+                                padding: '10px 20px',
+                                color: '#888',
+                                fontSize: '13px',
+                                cursor: 'pointer',
+                                fontFamily: 'monospace',
+                            }}>
+                                CANCELAR
+                            </button>
+                        )}
+                    </div>
+                </form>
+            </div>
+
+            {/* Tabla de elementos */}
+            <div style={{ overflowX: 'auto' }}>
+                <table style={{
+                    width: '100%',
+                    borderCollapse: 'collapse',
+                    fontSize: '13px',
+                }}>
+                    <thead>
+                        <tr style={{ borderBottom: '1px solid #3b9eff44' }}>
+                            {['Nombre', 'Símbolo', 'Nº Atómico', 'Masa', 'Grupo', 'Período', 'Categoría', 'Acciones'].map(h => (
+                                <th key={h} style={{
+                                    padding: '12px 16px',
+                                    textAlign: 'left',
+                                    color: '#3b9eff',
+                                    letterSpacing: '2px',
+                                    fontSize: '11px',
+                                    fontWeight: 'normal',
+                                }}>
+                                    {h.toUpperCase()}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {elementos.map((el: any) => (
+                            <tr key={el.ID} style={{
+                                borderBottom: '1px solid #ffffff11',
+                                transition: 'background 0.2s',
+                            }}
+                                onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#0b0e14')}
+                                onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
+                            >
+                                <td style={{ padding: '12px 16px', color: '#fff' }}>{el.NOMBRE}</td>
+                                <td style={{ padding: '12px 16px', color: '#3b9eff', fontWeight: 'bold' }}>{el.SIMBOLO}</td>
+                                <td style={{ padding: '12px 16px', color: '#aaa' }}>{el.NUMERO_ATOMICO}</td>
+                                <td style={{ padding: '12px 16px', color: '#aaa' }}>{el.MASA_ATOMICA}</td>
+                                <td style={{ padding: '12px 16px', color: '#aaa' }}>{el.GRUPO}</td>
+                                <td style={{ padding: '12px 16px', color: '#aaa' }}>{el.PERIODO}</td>
+                                <td style={{ padding: '12px 16px', color: '#aaa' }}>{el.CATEGORIA}</td>
+                                <td style={{ padding: '12px 16px', display: 'flex', gap: '8px' }}>
+                                    <button onClick={() => handleEditar(el)} style={{
+                                        backgroundColor: 'transparent',
+                                        border: '1px solid #00f5a0',
+                                        borderRadius: '6px',
+                                        padding: '6px 12px',
+                                        color: '#00f5a0',
+                                        fontSize: '11px',
+                                        cursor: 'pointer',
+                                        fontFamily: 'monospace',
+                                        letterSpacing: '1px',
+                                    }}>
+                                        EDITAR
+                                    </button>
+                                    <button onClick={() => handleBorrar(el.ID)} style={{
+                                        backgroundColor: 'transparent',
+                                        border: '1px solid #ff4444',
+                                        borderRadius: '6px',
+                                        padding: '6px 12px',
+                                        color: '#ff4444',
+                                        fontSize: '11px',
+                                        cursor: 'pointer',
+                                        fontFamily: 'monospace',
+                                        letterSpacing: '1px',
+                                    }}>
+                                        BORRAR
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                {elementos.length === 0 && (
+                    <p style={{ textAlign: 'center', color: '#555', padding: '40px', letterSpacing: '2px' }}>
+                        No hay elementos cargados
+                    </p>
+                )}
+            </div>
         </div>
     )
 }

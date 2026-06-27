@@ -1,12 +1,17 @@
 import { Link, useNavigate } from 'react-router-dom'
+import { isAdmin, isLoggedIn } from '../utils/auth'
 import styles from './navbar.module.css'
+
 function Navbar() {
     const navigate = useNavigate()
-    const token = localStorage.getItem('token')
+    const loggedIn = isLoggedIn()
+    const admin = isAdmin()
+
     const handleLogout = () => {
         localStorage.removeItem('token')
         navigate('/login')
     }
+
     return (
         <nav className={styles.nav}>
             <Link to="/" className={styles.logo}>
@@ -16,7 +21,10 @@ function Navbar() {
             <div className={styles.links}>
                 <Link to="/" className={styles.link}>Home</Link>
                 <Link to="/quiz" className={styles.link}>Quiz</Link>
-                {token ? (
+                {admin && (
+                    <Link to="/admin" className={styles.link}>Admin</Link>
+                )}
+                {loggedIn ? (
                     <button onClick={handleLogout} className={styles.logoutButton}>
                         Cerrar sesión
                     </button>
@@ -30,4 +38,5 @@ function Navbar() {
         </nav>
     )
 }
+
 export default Navbar
