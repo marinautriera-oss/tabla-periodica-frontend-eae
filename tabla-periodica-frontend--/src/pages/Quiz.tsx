@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import styles from './quiz.module.css'
 
-
 interface Elemento {
     ID: number
     NOMBRE: string
@@ -9,6 +8,8 @@ interface Elemento {
     NUMERO_ATOMICO: number
     CATEGORIA: string
     MASA_ATOMICA: number
+    GRUPO: number
+    PERIODO: number
 }
 
 interface Pregunta {
@@ -17,11 +18,11 @@ interface Pregunta {
     correcta: string
 }
 
-const TIPOS = ['simbolo', 'numero', 'categoria']
+const TIPOS = ['simbolo', 'numero', 'categoria', 'masa', 'periodo', 'grupo']
 
 function generarPreguntas(elementos: Elemento[]): Pregunta[] {
     const shuffled = [...elementos].sort(() => Math.random() - 0.5)
-    const seleccionados = shuffled.slice(0, 5)
+    const seleccionados = shuffled.slice(0, 10)
 
     return seleccionados.map(el => {
         const tipo = TIPOS[Math.floor(Math.random() * TIPOS.length)]
@@ -36,14 +37,16 @@ function generarPreguntas(elementos: Elemento[]): Pregunta[] {
             texto = `¿Cuál es el símbolo de ${el.NOMBRE}?`
             correcta = el.SIMBOLO
             opciones = [correcta, ...tresAleatorios.map(e => e.SIMBOLO)]
+
         } else if (tipo === 'numero') {
             texto = `¿Cuál es el número atómico de ${el.NOMBRE}?`
             correcta = String(el.NUMERO_ATOMICO)
             opciones = [correcta, ...tresAleatorios.map(e => String(e.NUMERO_ATOMICO))]
-        } else {
+
+        } else if (tipo === 'categoria') {
             texto = `¿A qué categoría pertenece ${el.NOMBRE}?`
             correcta = el.CATEGORIA
-            const cats = ['METAL', 'NO METAL', 'METALOIDE', 'GAS NOBLE']
+            const cats = ['METAL', 'NO METAL', 'METALOIDE', 'GAS NOBLE', 'METAL DE TRANSICION', 'LANTANIDO', 'ACTINIDO']
             const unicas = [...new Set([correcta, ...tresAleatorios.map(e => e.CATEGORIA)])]
             while (unicas.length < 4) {
                 const extra = cats.find(c => !unicas.includes(c))
@@ -51,6 +54,28 @@ function generarPreguntas(elementos: Elemento[]): Pregunta[] {
                 else break
             }
             opciones = unicas.slice(0, 4)
+
+        } else if (tipo === 'masa') {
+            texto = `¿Cuál es la masa atómica de ${el.NOMBRE}?`
+            correcta = String(el.MASA_ATOMICA)
+            opciones = [correcta, ...tresAleatorios.map(e => String(e.MASA_ATOMICA))]
+
+        } else if (tipo === 'periodo') {
+            texto = `¿En qué período se encuentra ${el.NOMBRE}?`
+            correcta = String(el.PERIODO)
+            const periodos = ['1', '2', '3', '4', '5', '6', '7']
+            const unicas = [...new Set([correcta, ...tresAleatorios.map(e => String(e.PERIODO))])]
+            while (unicas.length < 4) {
+                const extra = periodos.find(p => !unicas.includes(p))
+                if (extra) unicas.push(extra)
+                else break
+            }
+            opciones = unicas.slice(0, 4)
+
+        } else if (tipo === 'grupo') {
+            texto = `¿A qué grupo pertenece ${el.NOMBRE}?`
+            correcta = String(el.GRUPO)
+            opciones = [correcta, ...tresAleatorios.map(e => String(e.GRUPO))]
         }
 
         opciones = opciones.sort(() => Math.random() - 0.5)
@@ -67,7 +92,9 @@ function Quiz() {
     const [puntaje, setPuntaje] = useState(0)
     const [terminado, setTerminado] = useState(false)
     const [cargando, setCargando] = useState(true)
-const API_URL = import.meta.env.VITE_API_URL
+
+    const API_URL = import.meta.env.VITE_API_URL
+
     useEffect(() => {
         fetch(`${API_URL}/elements`)
             .then(r => r.json())
@@ -114,6 +141,15 @@ const API_URL = import.meta.env.VITE_API_URL
         return styles.opcion
     }
 
+    const getMensaje = () => {
+        const porcentaje = (puntaje / preguntas.length) * 100
+        if (porcentaje === 100) return '🏆 ¡Perfecto! Sos un experto en Química.'
+        if (porcentaje >= 80) return '⭐ ¡Excelente! Muy buen conocimiento.'
+        if (porcentaje >= 60) return '👍 ¡Bien! Seguí practicando.'
+        if (porcentaje >= 40) return '📚 No está mal, pero podés mejorar.'
+        return '🔬 Seguí estudiando, ¡la próxima te va mejor!'
+    }
+
     if (cargando) return (
         <div className={styles.page}>
             <p style={{ color: '#ffc60a', fontFamily: 'monospace', letterSpacing: '2px' }}>CARGANDO QUIZ...</p>
@@ -125,11 +161,7 @@ const API_URL = import.meta.env.VITE_API_URL
             <div className={styles.resultCard}>
                 <p className={styles.resultTag}>RESULTADO FINAL</p>
                 <p className={styles.resultScore}>{puntaje}/{preguntas.length}</p>
-                <p className={styles.resultMessage}>
-                    {puntaje === preguntas.length ? '¡Perfecto! Sos un experto en Química.' :
-                     puntaje >= 3 ? '¡Muy bien! Seguí practicando.' :
-                     'Seguí estudiando, ¡podés mejorar!'}
-                </p>
+                <p className={styles.resultMessage}>{getMensaje()}</p>
                 <button className={styles.retryButton} onClick={handleReintentar}>
                     INTENTAR DE NUEVO
                 </button>
@@ -146,7 +178,7 @@ const API_URL = import.meta.env.VITE_API_URL
     const pregunta = preguntas[actual]
     const esCorrecto = respondida && seleccionada === pregunta.correcta
     const esIncorrecto = respondida && seleccionada !== pregunta.correcta
-    const progreso = (actual / preguntas.length) * 100
+    const progreso = ((actual + 1) / preguntas.length) * 100
 
     return (
         <div className={styles.page}>
